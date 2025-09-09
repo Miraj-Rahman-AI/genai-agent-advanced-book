@@ -9,8 +9,12 @@ from langgraph.graph.state import CompiledStateGraph
 from langgraph.types import Command
 from loguru import logger
 
-from src.graph.models.data_analysis_state import DataAnalysisState
-from src.graph.models.programmer_state import ProgrammerState
+
+# src 下のファイルを読み込むために、sys.path にパスを追加
+root_dir = Path(__file__).resolve().parents[2]
+sys.path.append(str(root_dir))
+
+from src.graph.models import DataAnalysisState, ProgrammerState
 from src.graph.nodes import (
     approve_plan,
     generate_plan_node,
