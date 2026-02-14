@@ -1,11 +1,24 @@
 #!/bin/bash
 
-# PostgreSQLセットアップスクリプト
-# このスクリプトはDocker Composeを使用してPostgreSQLデータベースをセットアップします
+# ============================================================
+# PostgreSQL Setup Script
+# ------------------------------------------------------------
+# This script sets up a PostgreSQL database environment using
+# Docker Compose. It performs the following:
+#   - Checks for required dependencies (Docker & Docker Compose)
+#   - Validates required configuration files
+#   - Stops existing containers if running
+#   - Starts a new PostgreSQL container
+#   - Waits for the database to be ready
+#   - Verifies database initialization and connectivity
+# ============================================================
 
-set -e  # エラーが発生したら停止
+set -e  # Stop execution immediately if any command fails
 
-# 色付きの出力用の関数
+# ============================================================
+# Helper functions for colored terminal output
+# These improve readability by categorizing log messages.
+# ============================================================
 print_info() {
     echo -e "\033[1;34m[INFO]\033[0m $1"
 }
@@ -22,142 +35,184 @@ print_warning() {
     echo -e "\033[1;33m[WARNING]\033[0m $1"
 }
 
-# スクリプトの実行ディレクトリを取得
+# ============================================================
+# Determine the directory where this script is located
+# and switch execution to that directory.
+# This ensures relative paths (docker-compose.yml, init.sql)
+# work correctly regardless of where the script is run from.
+# ============================================================
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR"
 
-print_info "PostgreSQLセットアップを開始します..."
+print_info "Starting PostgreSQL setup..."
 
-# Dockerがインストールされているかチェック
+# ============================================================
+# Check if Docker is installed
+# Docker is required to run the PostgreSQL container.
+# ============================================================
 if ! command -v docker &> /dev/null; then
-    print_error "Dockerがインストールされていません。"
-    print_info "以下のコマンドでDockerをインストールしてください:"
+    print_error "Docker is not installed."
+    print_info "Please install Docker using one of the following commands:"
     print_info "  Ubuntu/Debian: sudo apt update && sudo apt install docker.io docker-compose"
     print_info "  macOS: brew install docker docker-compose"
     exit 1
 fi
 
-# Docker Composeがインストールされているかチェック
+# ============================================================
+# Check if Docker Compose is installed
+# Docker Compose is required to orchestrate the PostgreSQL service.
+# ============================================================
 if ! command -v docker-compose &> /dev/null; then
-    print_error "Docker Composeがインストールされていません。"
-    print_info "以下のコマンドでDocker Composeをインストールしてください:"
+    print_error "Docker Compose is not installed."
+    print_info "Install Docker Compose using:"
     print_info "  Ubuntu/Debian: sudo apt install docker-compose"
     print_info "  macOS: brew install docker-compose"
     exit 1
 fi
 
-# 必要なファイルの存在チェック
+# ============================================================
+# Verify required configuration files exist
+# ============================================================
 if [ ! -f "docker-compose.yml" ]; then
-    print_error "docker-compose.ymlファイルが見つかりません。"
+    print_error "docker-compose.yml file not found."
     exit 1
 fi
 
 if [ ! -f "init.sql" ]; then
-    print_error "init.sqlファイルが見つかりません。"
+    print_error "init.sql file not found."
     exit 1
 fi
 
-print_success "必要なファイルが確認されました。"
+print_success "All required configuration files are present."
 
-# 既存のコンテナを停止・削除
-print_info "既存のPostgreSQLコンテナを停止・削除しています..."
+# ============================================================
+# Stop and remove any existing PostgreSQL containers
+# This prevents conflicts with previously running instances.
+# The '-v' option removes volumes to ensure a clean database.
+# ============================================================
+print_info "Stopping and removing existing PostgreSQL containers..."
 docker-compose down -v 2>/dev/null || true
 
-# 5432ポートを使用している他のPostgreSQLプロセスを確認
-print_info "ポート5432の使用状況を確認しています..."
+# ============================================================
+# Check whether port 5432 is already in use
+# This is the default PostgreSQL port and may conflict with
+# local installations or other running containers.
+# ============================================================
+print_info "Checking port 5432 usage..."
 if netstat -tlnp 2>/dev/null | grep -q :5432; then
-    print_warning "ポート5432が使用されています。競合する可能性があります。"
-    print_info "他のPostgreSQLサービスを停止してください:"
-    print_info "  システムサービス: sudo service postgresql stop"
-    print_info "  または: sudo systemctl stop postgresql"
+    print_warning "Port 5432 is already in use. This may cause conflicts."
+    print_info "Please stop any existing PostgreSQL services:"
+    print_info "  System service: sudo service postgresql stop"
+    print_info "  Or: sudo systemctl stop postgresql"
     
-    # ユーザーに確認
-    read -p "続行しますか？ (y/N): " -n 1 -r
+    # Prompt user confirmation before continuing
+    read -p "Do you want to continue anyway? (y/N): " -n 1 -r
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        print_info "セットアップを中止しました。"
+        print_info "Setup aborted by user."
         exit 1
     fi
 fi
 
-# PostgreSQLコンテナを起動
-print_info "PostgreSQLコンテナを起動しています..."
+# ============================================================
+# Start PostgreSQL container using Docker Compose
+# ============================================================
+print_info "Starting PostgreSQL container..."
 docker-compose up -d
 
-# コンテナの起動を待機
-print_info "PostgreSQLの起動を待機しています..."
+# ============================================================
+# Wait for PostgreSQL container to initialize
+# Initial wait allows container to boot.
+# ============================================================
+print_info "Waiting for PostgreSQL to initialize..."
 sleep 5
 
-# 最大30秒待機
+# Maximum wait time (seconds)
 TIMEOUT=30
 COUNTER=0
+
+# Poll until PostgreSQL is ready or timeout reached
 while [ $COUNTER -lt $TIMEOUT ]; do
     if docker exec postgres-genai-ch3 pg_isready -U testuser -d testdb &>/dev/null; then
-        print_success "PostgreSQLが正常に起動しました！"
+        print_success "PostgreSQL started successfully!"
         break
     fi
     
-    print_info "PostgreSQLの起動を待機中... ($COUNTER/$TIMEOUT秒)"
+    print_info "Waiting for PostgreSQL startup... ($COUNTER/$TIMEOUT seconds)"
     sleep 1
     COUNTER=$((COUNTER + 1))
 done
 
+# If timeout reached without success, show error and logs
 if [ $COUNTER -eq $TIMEOUT ]; then
-    print_error "PostgreSQLの起動に失敗しました。"
-    print_info "以下のコマンドでログを確認してください:"
+    print_error "PostgreSQL failed to start within expected time."
+    print_info "Check logs using:"
     print_info "  docker-compose logs postgres"
     exit 1
 fi
 
-# データベースの初期化確認
-print_info "データベースの初期化を確認しています..."
+# ============================================================
+# Verify database initialization
+# Check if the employees table exists and contains data.
+# ============================================================
+print_info "Verifying database initialization..."
 if docker exec postgres-genai-ch3 psql -U testuser -d testdb -c "SELECT COUNT(*) FROM employees;" &>/dev/null; then
     employee_count=$(docker exec postgres-genai-ch3 psql -U testuser -d testdb -t -c "SELECT COUNT(*) FROM employees;" | xargs)
-    print_success "employeesテーブルが正常に作成されました。レコード数: $employee_count"
+    print_success "Employees table created successfully. Record count: $employee_count"
 else
-    print_error "データベースの初期化に失敗しました。"
+    print_error "Database initialization failed."
     exit 1
 fi
 
-# 接続テスト
-print_info "データベース接続テストを実行しています..."
+# ============================================================
+# Test database connectivity
+# ============================================================
+print_info "Running database connection test..."
 if docker exec postgres-genai-ch3 psql -U testuser -d testdb -c "SELECT version();" &>/dev/null; then
-    print_success "データベース接続テストが成功しました！"
+    print_success "Database connection test succeeded!"
 else
-    print_error "データベース接続テストに失敗しました。"
+    print_error "Database connection test failed."
     exit 1
 fi
 
-# セットアップ完了メッセージ
-print_success "PostgreSQLセットアップが完了しました！"
+# ============================================================
+# Final setup summary
+# ============================================================
+print_success "PostgreSQL setup completed successfully!"
 echo
-print_info "=== セットアップ情報 ==="
-print_info "コンテナ名: postgres-genai-ch3"
-print_info "データベース: testdb"
-print_info "ユーザー: testuser"
-print_info "パスワード: testpass"
-print_info "ポート: 5432"
-print_info "ホスト: localhost"
+print_info "=== Setup Information ==="
+print_info "Container Name: postgres-genai-ch3"
+print_info "Database: testdb"
+print_info "User: testuser"
+print_info "Password: testpass"
+print_info "Port: 5432"
+print_info "Host: localhost"
 echo
 
-print_info "=== 利用可能なコマンド ==="
-print_info "データベースに接続:"
+# ============================================================
+# Useful management commands
+# ============================================================
+print_info "=== Available Commands ==="
+print_info "Connect to database:"
 print_info "  docker exec -it postgres-genai-ch3 psql -U testuser -d testdb"
 echo
-print_info "employeesテーブルの確認:"
+print_info "View employees table:"
 print_info "  docker exec postgres-genai-ch3 psql -U testuser -d testdb -c \"SELECT * FROM employees;\""
 echo
-print_info "コンテナの停止:"
+print_info "Stop container:"
 print_info "  docker-compose down"
 echo
-print_info "コンテナの再起動:"
+print_info "Restart container:"
 print_info "  docker-compose up -d"
 echo
 
-print_info "=== Jupyter Notebookでの使用方法 ==="
-print_info "1. .envファイルにOpenAI API Keyを設定してください"
-print_info "2. notebooks/examples.ipynbを開いてください"
-print_info "3. SQLDatabaseChainの使用例セクションを実行してください"
+# ============================================================
+# Instructions for use in Jupyter Notebook environment
+# ============================================================
+print_info "=== Usage in Jupyter Notebook ==="
+print_info "1. Set your OpenAI API key in the .env file"
+print_info "2. Open notebooks/examples.ipynb"
+print_info "3. Run the SQLDatabaseChain usage section"
 echo
 
-print_success "セットアップが完了しました。"
+print_success "Setup completed successfully."
