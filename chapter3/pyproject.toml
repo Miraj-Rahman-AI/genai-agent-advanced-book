@@ -1,28 +1,28 @@
 [project]
 name = "chapter3"
 version = "0.1.0"
-description = "現場で活用するためのAIエージェント実践入門 第3章"
+description = "A Practical Introduction to AI Agents for Field Use: Chapter 3"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "openai>=1.53.1",
-    "pydantic>=2.0.0",
-    "langchain>=0.3.0",
-    "langchain-community>=0.2.13",
-    "langchain-core>=0.3.0",
-    "langchain-openai>=0.3.28",
-    "langchain-experimental>=0.3.0",
-    "duckduckgo-search>=3.0.0",
-    "requests>=2.31.0",
-    "langgraph>=0.2.14",
-    "psycopg2-binary>=2.9.9",
-    "tavily-python>=0.3.0",
-    "python-dotenv>=1.1.1",
+"openai>=1.53.1",
+"pydantic>=2.0.0",
+"langchain>=0.3.0",
+"langchain-community>=0.2.13",
+"langchain-core>=0.3.0",
+"langchain-openai>=0.3.28",
+"langchain-experimental>=0.3.0",
+"duckduckgo-search>=3.0.0",
+"requests>=2.31.0",
+"langgraph>=0.2.14",
+"psycopg2-binary>=2.9.9", 
+"tavily-python>=0.3.0", 
+"python-dotenv>=1.1.1",
 ]
 
 [project.optional-dependencies]
-dev = [
-    "ipykernel>=6.29.5"
+dev = [ 
+"ipykernel>=6.29.5"
 ]
 
 [build-system]
@@ -34,17 +34,17 @@ where = ["."]
 include = ["chapter3"]
 
 [tool.ruff]
-select = [
-    "F", # Flake8
-    "B", # Black
-    "I", # isort
-    "E", # error
-    "W"  # warning
+select = [ 
+"F", # Flake8 
+"B", # Black 
+"I", #isort 
+"E", # error 
+"W" # warning
 ]
 ignore = []
 fixable = ["ALL"]
-exclude = [
-    ".ruff_cache"
+exclude = [ 
+".ruff_cache"
 ]
 line-length = 119
 indent-width = 4
