@@ -1,4 +1,4 @@
-# プログラムリスト5.3: E2B Sandbox の使い方
+# Program Listing 5.3: How to use E2B Sandbox
 from dotenv import load_dotenv
 from e2b_code_interpreter import Sandbox
 from loguru import logger
