@@ -1,34 +1,34 @@
 ---
 name: error_report.md
-about: エラーレポート
+about: Error Report
 title: ''
 labels: ''
 assignees: ''
 ---
 
-**エラーの説明**
+**Error Description**
 
-発生したエラーについて説明してください。
-エラーメッセージは省略せず、全文を掲載してください。
+Describe the error you encountered.
+Please include the full error message.
 
-**スクリーンショット**
+**Screenshot**
 
-できるだけ、エラーのスクリーンショットを共有してください。
+Please share a screenshot of the error if possible.
 
-**書籍の該当箇所**
+**Relevant Book Section**
 
-書籍のどの章のどの箇所でエラーが発生したのか記載してください。
-例えば書籍のどのページかを記載いただくと、対応がスムーズになります。
+Please indicate which chapter and section of the book the error occurred in.
+For example, including the page in the book will help us troubleshoot more quickly.
 
-**書籍の内容以外で実施したこと**
+**Actions Outside the Book**
 
-書籍の内容以外で何か実施した場合、その内容も記載してください。
-たとえば書籍と違う手順でコマンドを実行した場合は、分かる範囲で実行したコマンド・手順を記載してください。
+If you attempted anything outside the book's instructions, please also include that information.
+For example, if you executed commands using a different procedure than the book's instructions, please describe the commands and steps you performed to the best of your knowledge.
 
-**環境**
+**Environment**
 
-Google Colab（Google Colab 以外の環境を使用している場合はご記入ください）
+Google Colab (Please specify if you are using an environment other than Google Colab)
 
-**その他**
+**Other**
 
-エラーの解決のため、その他ご自身で試したことや、確認したログなどがあれば記載してください。
+Please include any other actions you have taken to resolve the error, or any logs you have checked.
