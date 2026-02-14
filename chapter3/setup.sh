@@ -1,37 +1,50 @@
 #!/bin/bash
 
-# 現在のディレクトリを確認
-echo "作業ディレクトリ: $(pwd)"
+# Display the current working directory to confirm where the setup is being executed.
+# This helps ensure the script is being run inside the correct project folder.
+echo "Working directory: $(pwd)"
 
-# uvがインストールされているか確認
+# Check whether the 'uv' package manager is already installed on the system.
+# 'uv' is used for Python environment and dependency management in this project.
 if ! command -v uv &> /dev/null; then
-    echo "uvをインストールしています..."
+    echo "Installing uv package manager..."
+
+    # Download and install uv using the official installation script.
     curl -LsSf https://astral.sh/uv/install.sh | sh
-    # PATHに追加するための提案
-    echo "uvがインストールされました。必要に応じて以下のコマンドを実行してPATHに追加してください："
+
+    # After installation, suggest adding uv to the system PATH if not already available.
+    # This ensures the uv command can be executed globally from the terminal.
+    echo "uv has been installed. If necessary, run the following command to add it to your PATH:"
     echo 'export PATH="$HOME/.cargo/bin:$PATH"'
-    # 直接PATHに追加
+
+    # Automatically add uv to the current session PATH so it can be used immediately.
     export PATH="$HOME/.cargo/bin:$PATH"
 else
-    echo "uvは既にインストールされています: $(which uv)"
+    # If uv is already installed, display its location.
+    echo "uv is already installed: $(which uv)"
 fi
 
-# 仮想環境の作成と依存関係のインストール
-echo "Python 3.12の仮想環境を作成し、依存関係をインストールしています..."
+# Create a Python 3.12 virtual environment and install all required dependencies.
+# 'uv sync' reads project configuration (pyproject.toml / requirements)
+# and installs all necessary packages into the virtual environment.
+echo "Creating Python 3.12 virtual environment and installing dependencies..."
 uv sync
 
-# Jupyter用カーネルを設定 (Python 3.12環境)
-echo "Jupyterカーネルを登録しています..."
+# Register a Jupyter Notebook kernel for this virtual environment.
+# This allows the environment to appear as a selectable kernel inside Jupyter.
+echo "Registering Jupyter kernel..."
 uv run python -m ipykernel install --user --name genai_ch3 --display-name "Python 3.12 (Chapter 3)"
 
-# 環境変数ファイルの作成（すでに存在する場合はスキップ）
+# Create an environment variable configuration file if it does not already exist.
+# The .env file typically contains API keys and sensitive configuration values.
 if [ ! -f .env ]; then
-    echo "環境変数ファイル(.env)を.env.exampleから作成しています..."
+    echo "Creating environment variable file (.env) from .env.example..."
     cp .env.example .env
-    echo "※ .envファイルに適切なAPIキーを設定してください"
+    echo "NOTE: Please update the .env file and set the appropriate API keys."
 fi
 
-echo "環境構築が完了しました！"
-echo "以下のコマンドで仮想環境をアクティベートできます：source .venv/bin/activate"
-echo "または uv run を使用してコマンドを実行できます：uv run python your_script.py"
-echo "以下のコマンドでJupyter Notebookを起動できます：uv run jupyter notebook"
+# Final setup completion message and usage instructions.
+echo "Environment setup is complete!"
+echo "You can activate the virtual environment using: source .venv/bin/activate"
+echo "Or run commands directly using uv: uv run python your_script.py"
+echo "To start Jupyter Notebook, run: uv run jupyter notebook"
