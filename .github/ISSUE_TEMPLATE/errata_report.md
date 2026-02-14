@@ -1,29 +1,29 @@
 ---
 name: errata_report.md
-about: 書籍の誤り（誤字など）の報告
+about: Report a book error (typo, etc.)
 title: ''
-labels: '誤植'
+labels: 'typo'
 assignees: ''
 ---
 
-**書籍の該当箇所**
+**Relevant section in book**
 
-書籍の何ページの何行目が該当箇所か記載してください。
+Please indicate the page and line number of the relevant section.
 
-例)
+Example)
 
-- p82 本文 3 行目
-- p156 図 7.1
-- p183 ソースコード 4 行目
+- p. 82, main text, line 3
+- p. 156, Figure 7.1
+- p. 183, source code, line 4
 
-**誤った単語や文章**
+**Incorrect word or sentence**
 
-誤った単語や文章を記載してください。
+Please indicate the incorrect word or sentence.
 
-**正しい単語や文章**
+**Correct word or sentence**
 
-正しい単語や文章を記載してください。
+Please indicate the correct word or sentence.
 
-**その他、情報源など**
+**Other sources, etc.**
 
-参考にした情報源などがあれば記載してください。
+Please indicate any sources you used.
