@@ -1,16 +1,16 @@
--- テストデータベースの初期化スクリプト
--- このスクリプトはDocker Composeで自動的に実行されます
+-- Test database initialization script
+-- This script is executed automatically by Docker Compose.
 
--- テストテーブルの作成
+-- Creating a test table
 CREATE TABLE IF NOT EXISTS employees (
-    id SERIAL PRIMARY KEY,
-    name VARCHAR(100) NOT NULL,
-    department VARCHAR(50),
-    salary INTEGER,
-    hire_date DATE
+id SERIAL PRIMARY KEY,
+name VARCHAR(100) NOT NULL,
+department VARCHAR(50),
+salary INTEGER,
+hire_date DATE
 );
 
--- テストデータの挿入
+-- Inserting test data
 INSERT INTO employees (name, department, salary, hire_date) VALUES
 ('Tanaka Taro', 'IT', 600000, '2020-04-01'),
 ('Yamada Hanako', 'HR', 550000, '2019-03-15'),
@@ -23,5 +23,5 @@ INSERT INTO employees (name, department, salary, hire_date) VALUES
 ('Inoue Kana', 'Marketing', 590000, '2021-11-10'),
 ('Takahashi Ken', 'IT', 710000, '2019-09-05');
 
--- データの確認
-SELECT 'データベースの初期化が完了しました。従業員数:' as message, COUNT(*) as count FROM employees;
+-- Data verification
+SELECT 'Database initialization completed. Number of employees:' as message, COUNT(*) as count FROM employees;
