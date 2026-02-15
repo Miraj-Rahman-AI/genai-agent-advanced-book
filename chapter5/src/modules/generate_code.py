@@ -19,13 +19,13 @@ def generate_code(
     )
     messages = [
         {"role": "system", "content": system_message},
-        {"role": "user", "content": f"タスク要求: {user_request}"},
+        {"role": "user", "content": f"Task request: {user_request}"},
     ]
-    # 自己修正：レビュー結果（5.4.3項参照）があれば反映する
+    # Self-correction: incorporate review results if available (see Section 5.4.3)
     if previous_thread:
-        # 前のスレッドのコードを追加
+        # Add the code from the previous thread
         messages.append({"role": "assistant", "content": previous_thread.code})
-        # 前のスレッドの標準出力と標準エラーを追加
+        # Add stdout and stderr from the previous thread
         if previous_thread.stdout and previous_thread.stderr:
             messages.extend(
                 [
@@ -33,12 +33,12 @@ def generate_code(
                     {"role": "system", "content": f"stderr: {previous_thread.stderr}"},
                 ],
             )
-        # 前のスレッドの観測結果を追加
+        # Add observation results from the previous thread
         if previous_thread.observation:
             messages.append(
                 {
                     "role": "user",
-                    "content": f"以下を参考にして、ユーザー要求を満たすコードを再生成してください: {previous_thread.observation}",
+                    "content": f"Refer to the following and regenerate code that satisfies the user requirements: {previous_thread.observation}",
                 },
             )
     return openai.generate_response(
