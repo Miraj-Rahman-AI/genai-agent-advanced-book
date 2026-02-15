@@ -1,72 +1,56 @@
 from pydantic import BaseModel, Field
 
 
-# class Task(BaseModel):
-#     hypothesis: str = Field(description="分析レポートにおいて検証可能な仮説")
-#     purpose: str = Field(description="仮説の検証目的")
-#     description: str = Field(description="具体的な分析方針と可視化対象")
-#     chart_type: str = Field(description="グラフ想定, 例: ヒストグラム、棒グラフなど")
-
-
-# class Plan(BaseModel):
-#     purpose: str = Field(description="タスク要求から解釈される問い合わせ目的")
-#     archivement: str = Field(description="タスク要求から推測されるタスク達成条件")
-#     tasks: list[Task]
-
-
 class Task(BaseModel):
     hypothesis: str = Field(
-        title="仮説",
+        title="Hypothesis",
         description=(
-            "検証可能な仮説を、その推測理由とともに詳細に記述する。"
-            "仮説は、データ分析によって検証したい因果関係や傾向、または期待される結果について、"
-            "具体的かつ明確に表現する。"
+            "Describe a verifiable hypothesis in detail along with the reasoning behind it. "
+            "The hypothesis should clearly and specifically express the causal relationships, trends, "
+            "or expected outcomes that you want to validate through data analysis."
         ),
         examples=[
-            "週末は多くの人が買い物をするため、土日は売上が増加する。",
-            "新規ユーザーへのプロモーション施策が初回購入率を向上させる。",
+            "Sales increase on weekends because more people go shopping on Saturdays and Sundays.",
+            "Promotional campaigns for new users improve the first-time purchase rate.",
         ],
     )
     purpose: str = Field(
-        title="仮説の検証目的",
+        title="Purpose of Hypothesis Validation",
         description=(
-            "この仮説を検証することで明らかにしたい課題や目的を具体的に記述する。"
-            "仮説の検証がどのような意思決定や業務改善につながるか、またはどのような知見を得たいのかを明確に示す。"
+            "Clearly describe the issues or objectives that you aim to clarify by validating this hypothesis. "
+            "Explain how validating the hypothesis will contribute to decision-making, business improvement, "
+            "or the insights you want to obtain."
         ),
         examples=[
-            "曜日ごとの売上の違いを検証する。",
-            "プロモーション施策の購買行動の変化についてターゲット層別にその影響を明らかにする。",
+            "Validate differences in sales by day of the week.",
+            "Identify the impact of promotional campaigns on purchasing behavior by target segment.",
         ],
     )
     description: str = Field(
-        title="分析手法の詳細",
+        title="Detailed Analysis Method",
         description=(
-            "どのような分析手法（例：単変量解析、多変量解析、回帰分析、クラスタリングなど）を用いるか記述する。"
-            "どの変数を使用するか、また関数の引数・戻り値を指定し、どのような比較や可視化を行うか詳細に記述する。"
+            "Describe which analytical methods will be used (e.g., univariate analysis, multivariate analysis, "
+            "regression analysis, clustering, etc.). "
+            "Specify which variables will be used, define function arguments and return values if applicable, "
+            "and describe in detail what comparisons or visualizations will be performed."
         ),
     )
     chart_type: str = Field(
-        title="グラフ想定",
-        description="想定する可視化の種類を記述する。",
+        title="Expected Chart Type",
+        description="Specify the type of visualization expected.",
         examples=[
-            "ヒストグラム",
-            "棒グラフ",
-            "折れ線グラフ",
-            "円グラフ",
-            "散布図",
+            "Histogram",
+            "Bar chart",
+            "Line chart",
+            "Pie chart",
+            "Scatter plot",
         ],
     )
 
 
-# class Plan(BaseModel):
-#     purpose: str = Field(description="タスク要求から解釈される問い合わせ目的")
-#     archivement: str = Field(description="タスク要求から推測されるタスク達成条件")
-#     tasks: list[Task]
-
-
 class Plan(BaseModel):
-    purpose: str = Field(description="タスク要求から解釈される問い合わせ目的")
-    archivement: str = Field(description="タスク要求から推測されるタスク達成条件")
+    purpose: str = Field(description="The interpreted objective derived from the task request")
+    archivement: str = Field(description="The inferred success criteria for achieving the task")
     tasks: list[Task]
 
 
