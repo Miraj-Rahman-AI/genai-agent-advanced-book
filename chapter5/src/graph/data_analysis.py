@@ -10,7 +10,7 @@ from langgraph.types import Command
 from loguru import logger
 
 
-# src 下のファイルを読み込むために、sys.path にパスを追加
+# Add the path to sys.path so that files under src can be imported
 root_dir = Path(__file__).resolve().parents[2]
 sys.path.append(str(root_dir))
 
@@ -31,7 +31,7 @@ def open_programmer(state: DataAnalysisState) -> Command:
         if sub_task.state is False:
             target_task = sub_task.task
             break
-    # 全てのタスクが完了していたら
+    # If all tasks are completed
     if target_task is None:
         return Command(
             goto="generate_report",
@@ -39,7 +39,7 @@ def open_programmer(state: DataAnalysisState) -> Command:
                 "next_node": "generate_report",
             },
         )
-    # 未完了タスクがある場合は、そのタスクを実行
+    # If there are unfinished tasks, execute that task
     user_request = target_task.purpose
     sandbox = Sandbox(timeout=1200)
     sandbox_id = sandbox.sandbox_id
@@ -56,7 +56,7 @@ def open_programmer(state: DataAnalysisState) -> Command:
 def _close_programmer(state: ProgrammerState) -> Command:
     logger.info("|--> _close_programmer")
     Sandbox.kill(state["sandbox_id"])
-    # TODO: 最終実施タスクのデータスレッドのみを使用
+    # TODO: Use only the data thread from the final executed task
     sub_task_threads = state.get("sub_task_threads", [])
     sub_task_threads.append(state["data_threads"][-1])
     return Command(
@@ -65,8 +65,8 @@ def _close_programmer(state: ProgrammerState) -> Command:
         update={
             "next_node": "open_programmer",
             "sub_task_threads": sub_task_threads,
-            "data_threads": [],  # 初期化
-            "sub_tasks": state.get("sub_tasks", [])[1:],  # 更新
+            "data_threads": [],  # Reset
+            "sub_tasks": state.get("sub_tasks", [])[1:],  # Update
         },
     )
 
@@ -108,7 +108,7 @@ def main() -> None:
     parser.add_argument(
         "--user_goal",
         type=str,
-        default="scoreと曜日の関係について分析してください",
+        default="Please analyze the relationship between score and day of the week",
     )
     parser.add_argument("--recursion_limit", type=int, default=30)
     args = parser.parse_args()
