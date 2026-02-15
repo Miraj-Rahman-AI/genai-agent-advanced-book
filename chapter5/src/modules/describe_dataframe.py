@@ -9,13 +9,13 @@ def describe_dataframe(
     file_object: io.BytesIO,
     template_file: str = "src/prompts/describe_dataframe.jinja",
 ) -> str:
-    # CSVファイルを読み込み、データフレームを作成
+    # Read the CSV file and create a DataFrame
     df = pd.read_csv(file_object)
-    # データフレームの概要情報を取得
+    # Retrieve summary information of the DataFrame
     buf = io.StringIO()
     df.info(buf=buf)
     df_info = buf.getvalue()
-    # データフレーム情報を構築して返す
+    # Build and return the DataFrame information
     template = load_template(template_file)
     return template.render(
         df_info=df_info,
