@@ -1,24 +1,22 @@
 from pydantic import BaseModel, Field
 
 
-# class Review(BaseModel):
-#     observation: str = Field(description="コードに対するフィードバックやコメント")
-#     is_completed: bool = Field(description="実行結果がタスク要求を満たすか")
-
-
 class Review(BaseModel):
     observation: str = Field(
-        title="実行結果に対する客観的受け止め",
+        title="Objective assessment of execution results",
         description=(
-            "まずはコードの実行結果に対する客観的な事実を記述する。例えば「正常に終了し、〇〇という結果を得た。」「エラーが発生した。」などを記述する。"
-            "その後、コードの実行結果がユーザーから与えられた要求に対して最低限担保できているかを評価する。"
-            "要求を満たさない場合は、その修正方針を追記する。"
+            "First, describe the objective facts regarding the code execution results. "
+            "For example: 'Execution completed successfully and produced the result XX.' "
+            "or 'An error occurred.' "
+            "Then evaluate whether the execution result sufficiently satisfies the user's request at a minimum level. "
+            "If the requirements are not met, append a proposed revision or improvement plan."
         ),
     )
     is_completed: bool = Field(
-        title="タスク達成条件",
+        title="Task completion status",
         description=(
-            "実行結果がユーザーから与えられた要求に対して最低限担保できているかを評価する。"
-            "タスク要求を満たさない場合はFalse、改善点はあれど最低限要求を満たす場合はTrueとする。"
+            "Evaluate whether the execution results sufficiently satisfy the user's request at a minimum level. "
+            "Set to False if the task requirements are not met. "
+            "Set to True if the minimum requirements are satisfied, even if improvements are still possible."
         ),
     )
