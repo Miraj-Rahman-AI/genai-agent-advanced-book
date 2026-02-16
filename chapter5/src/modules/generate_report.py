@@ -20,14 +20,14 @@ def generate_report(
     template_file: str = "src/prompts/generate_report.jinja",
 ) -> LLMResponse:
     os.makedirs(output_dir, exist_ok=True)
-    # プロンプトの構築
+    # Build the prompt
     template = load_template(template_file)
     system_message = template.render(data_info=data_info)
     messages = [
         {"role": "system", "content": system_message},
-        {"role": "user", "content": f"タスク要求: {user_request}"},
+        {"role": "user", "content": f"Task request: {user_request}"},
     ]
-    ## 実行結果の追加
+    ## Add execution results
     for data_thread in process_data_threads:
         user_contents = [
             {"type": "input_text", "text": f"instruction: {data_thread.user_request}"},
@@ -47,7 +47,7 @@ def generate_report(
                     [
                         {
                             "type": "input_text",
-                            "text": f'画像パス: "{image_path}", 画像:',
+                            "text": f'Image path: "{image_path}", image:',
                         },
                         {
                             "type": "input_image",
@@ -57,11 +57,11 @@ def generate_report(
                 )
             else:
                 user_contents.append(
-                    {"type": "text", "text": f"実行結果: {res['content']}"},
+                    {"type": "text", "text": f"Execution result: {res['content']}"},
                 )
         messages.append({"role": "user", "content": user_contents})
 
-    # レポートの生成と保存
+    # Generate and save the report
     llm_response = openai.generate_response(
         messages,
         model=model,
