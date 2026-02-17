@@ -3,10 +3,12 @@ __pycache__/
 *.py[cod]
 *$py.class
 
+
 # C extensions
 *.so
 
-# Distribution / packaging
+
+# Distribution/packaging
 .Python
 build/
 develop-eggs/
@@ -26,15 +28,19 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# Installer logs
+
+#Installer logs
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Jupyter Notebook
+
+#JupyterNotebook
 .ipynb_checkpoints
+
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
 __pypackages__/
+
 
 # Environments
 .env
@@ -45,16 +51,20 @@ ENV/
 env.bak/
 venv.bak/
 
+
 # mypy
 .mypy_cache/
 .dmypy.json
 dmypy.json
 
+
 # Pyre type checker
 .pyre/
 
+
 # pytype static type analyzer
 .pytype/
+
 
 # Cython debug symbols
 cython_debug/
