@@ -1,7 +1,7 @@
 from typing import TypedDict
 
 from langchain_openai import ChatOpenAI
-from langgraph.graph import StateGraph
+from langgraph.graph import END, StateGraph
 from langgraph.graph.state import CompiledStateGraph
 from langgraph.types import Command
 
@@ -39,13 +39,16 @@ class PaperAnalyzerAgentState(
 
 
 class PaperAnalyzerAgent:
-    # Maximum number of sections to read
+    # 読み取りを行う最大セクション数
     MAX_SECTIONS = 5
 
-    # Number of times to check sufficiency
+    # 十分性をチェックする回数
     CHECK_COUNT = 3
 
-    def __init__(self, llm: ChatOpenAI):
+    def __init__(
+        self,
+        llm: ChatOpenAI,
+    ):
         self.set_section = SetSection(llm, max_sections=self.MAX_SECTIONS)
         self.check_sufficiency = CheckSufficiency(llm, check_count=self.CHECK_COUNT)
         self.summarizer = Summarizer(llm)
@@ -73,23 +76,23 @@ class PaperAnalyzerAgent:
         if reading_result is None:
             raise ValueError("reading_result is not set")
         reading_result.is_related = False
-        return Command(update={"reading_result": reading_result})
+        return Command(
+            update={"reading_result": reading_result},
+        )
 
 
 graph = PaperAnalyzerAgent(llm=settings.fast_llm).graph
 
-
 if __name__ == "__main__":
-    # Example:
     # uv run python -m arxiv_researcher.agent.paper_analyzer_agent fixtures/2408.14317.md
     import sys
     from pathlib import Path
 
-    # Read the markdown file for testing from the command line
+    # コマンドラインからテスト用のmarkdownファイルを読み込む
     markdown_file_path = Path(sys.argv[1])
     reading_result = ReadingResult(
         id=0,
-        task="Summarize the significance of the research",
+        task="研究の意義についてまとめよ",
         paper=ArxivPaper(
             title="Claim Verification in the Age of Large Language Models: A Survey",
             authors=[
@@ -99,19 +102,7 @@ if __name__ == "__main__":
                 "Prasad Calyam",
                 "Isabelle Augenstein",
             ],
-            abstract=(
-                "The large and ever-increasing amount of data available on the Internet coupled with the "
-                "laborious task of manual claim and fact verification has sparked the interest in the "
-                "development of automated claim verification systems. Several deep learning and transformer-based "
-                "models have been proposed for this task over the years. With the introduction of Large Language "
-                "Models (LLMs) and their superior performance in several NLP tasks, we have seen a surge of "
-                "LLM-based approaches to claim verification along with the use of novel methods such as Retrieval "
-                "Augmented Generation (RAG). In this survey, we present a comprehensive account of recent claim "
-                "verification frameworks using LLMs. We describe the different components of the claim "
-                "verification pipeline used in these frameworks in detail including common approaches to "
-                "retrieval, prompting, and fine-tuning. Finally, we describe publicly available English datasets "
-                "created for this task."
-            ),
+            abstract="The large and ever-increasing amount of data available on the Internet coupled with the laborious task of manual claim and fact verification has sparked the interest in the development of automated claim verification systems. 1 Several deep learning and transformer-based models have been proposed for this task over the years. With the i ntroduction of Large Language Models (LLMs) and their superior performance in several NLP tasks, we have seen a surge of LLM-based approaches to claim verification along with the use of novel methods such as Retrieval Augmented Generation (RAG). In this survey, we present a comprehensive account of recent claim verification frameworks using LLMs. We describe the different components of the claim v erification pipeline used in these frameworks in detail including common approaches to retrieval, prompting, and fine-tuning. Finally, we describe publicly available English datasets created for this task.",
         ),
         markdown_path=str(markdown_file_path),
     )
@@ -119,10 +110,9 @@ if __name__ == "__main__":
     agent = PaperAnalyzerAgent(
         llm=ChatOpenAI(model="gpt-4o-mini", temperature=0.0),
     )
-
     for state in agent.graph.stream(
         PaperAnalyzerAgentState(
-            goal="Summarize the significance of the research",
+            goal="研究の意義についてまとめよ",
             reading_result=reading_result,
         )
     ):
