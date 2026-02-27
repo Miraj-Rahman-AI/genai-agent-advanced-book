@@ -166,11 +166,11 @@ drawio/**.png
 langchain/
 reflections.json
 
-# すべてのtmpディレクトリとその中身を無視（再帰的）
+# Ignore all tmp directories and their contents (recursively)
 tmp/**/*
 **/tmp/**/*
 
-# ただし、.gitkeepファイルは保持
+# However, the .gitkeep file is retained.
 !tmp/**/.gitkeep
 !**/tmp/**/.gitkeep
 
