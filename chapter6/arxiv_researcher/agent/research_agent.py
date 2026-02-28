@@ -86,12 +86,15 @@ class ResearchAgent:
     def _human_feedback(
         self, state: ResearchAgentState
     ) -> Command[Literal["user_hearing"]]:
-        # 最後のメッセージを取得
+        # Get the last message
         last_message = state["messages"][-1]
-        # ユーザーへの質問を表示
+
+        # Display the question to the user
         human_feedback = interrupt(last_message.content)
+
         if human_feedback is None:
-            human_feedback = "そのままの条件で検索し、調査してください。"
+            human_feedback = "Proceed with the current conditions and conduct the investigation."
+
         return Command(
             goto="user_hearing",
             update={"messages": [{"role": "human", "content": human_feedback}]},
@@ -111,6 +114,7 @@ class ResearchAgent:
 
 
 graph = ResearchAgent().graph
+
 
 if __name__ == "__main__":
     png_file = graph.get_graph().draw_mermaid_png()
