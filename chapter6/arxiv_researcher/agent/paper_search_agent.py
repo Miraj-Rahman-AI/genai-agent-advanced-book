@@ -83,7 +83,7 @@ class PaperSearchAgent:
         processing_reading_results = state.get("processing_reading_results", [])
         reading_results = []
 
-        # 関連性のある論文のみをフィルタリング
+        # Filter only related papers
         for result in processing_reading_results:
             if result and result.is_related:
                 reading_results.append(result)
@@ -96,13 +96,14 @@ graph = PaperSearchAgent(
     ArxivSearcher(settings.fast_llm),
 ).graph
 
+
 if __name__ == "__main__":
     searcher = ArxivSearcher(settings.fast_llm)
     agent = PaperSearchAgent(settings.fast_llm, searcher)
     initial_state: PaperSearchAgentState = {
-        "goal": "LLMエージェントの評価方法について調べる",
+        "goal": "Investigate evaluation methods for LLM agents",
         "tasks": [
-            "2023年以降に発表された論文をarXivから調査し、最新のLLMエージェント評価用データセットを収集する。"
+            "Search arXiv for papers published after 2023 and collect the latest datasets for evaluating LLM agents."
         ],
     }
 
@@ -114,10 +115,10 @@ if __name__ == "__main__":
     ):
         parent, update_state = event
 
-        # 実行ノードの情報を取得
+        # Get information about the executed node
         node = list(update_state.keys())[0]
 
-        # parentが空の()でない場合
+        # If parent is not an empty tuple ()
         if parent:
             print(f"{parent}: {node}")
         else:
