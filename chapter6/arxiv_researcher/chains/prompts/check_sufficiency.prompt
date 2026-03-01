@@ -13,5 +13,7 @@
 </goal_setting>
 
 <task>
-goal_settingsタグで与えられている目標を達成するために、調査タスクとして「{task}」を実施します。今あなたはpaper_informationタグに含まれている論文を読んでいます。調査タスクを実行する上で、sectionsタグに含まれている内容で十分かどうかを判断してください。
-</task> 
+To achieve the goal provided in the goal_setting tag, you will carry out the research task: "{task}".
+You are currently reading the paper contained in the paper_information tag.
+Determine whether the content included in the sections tag is sufficient to execute the research task.
+</task>
