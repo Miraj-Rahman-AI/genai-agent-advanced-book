@@ -2,13 +2,13 @@ from pathlib import Path
 
 
 def load_prompt(name: str) -> str:
-    """プロンプトファイルを読み込む
+    """Load a prompt file.
 
     Args:
-        name (str): プロンプトファイル名（.promptは不要）
+        name (str): Prompt file name (without the .prompt extension)
 
     Returns:
-        str: プロンプトの内容
+        str: The content of the prompt
     """
     prompt_path = Path(__file__).parent / "prompts" / f"{name}.prompt"
     return prompt_path.read_text().strip()
