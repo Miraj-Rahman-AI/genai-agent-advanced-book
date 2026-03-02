@@ -21,19 +21,22 @@
 </sufficiency_check>
 
 <task>
-goal_settingsタグで与えられている目標を達成するために、調査タスクとして「{task}」を実施します。今あなたはpaper_informationタグに含まれている論文を読んでいます。調査タスクを実行する上で、sectionsタグに含まれている内容から読むべきセクション番号を出力してください。セクション番号をカンマ区切りで出力すること。
+To achieve the objective described in the goal_setting tag, you will perform the research task: "{task}".
+You are currently reading the paper contained in the paper_information tag.
+Based on the content included in the sections tag, output the section numbers that should be read in order to execute the research task.
+Output the section numbers separated by commas.
 
-例：
+Example:
 1,3,4
 
-最大{max_sections}個のセクションまで選択可能です。
+You may select up to {max_sections} sections.
 </task>
 
-以下のrulesタグに囲まれた内容を必ず守ること。
+You must strictly follow the content enclosed in the rules tag below.
 
 <rules>
-- selected_section_indicesタグに含まれているセクション番号は指定しないこと。
-- sufficiency_checkタグに記載されている内容を参考にセクション番号を選択すること。
-- カンマ区切りで複数のセクション番号を出力すること。
-- スペースは絶対に含めないこと。
+- Do not specify any section numbers included in the selected_section_indices tag.
+- Select section numbers by referring to the content described in the sufficiency_check tag.
+- Output multiple section numbers separated by commas.
+- Do not include any spaces.
 </rules>
