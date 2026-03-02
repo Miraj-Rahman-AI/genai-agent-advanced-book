@@ -16,9 +16,9 @@ def load_prompt(name: str) -> str:
 
 class Hearing(BaseModel):
     is_need_human_feedback: bool = Field(
-        default=False, description="追加の質問が必要かどうか"
+        default=False, description="Whether additional questions are needed"
     )
-    additional_question: str = Field(default="", description="追加の質問")
+    additional_question: str = Field(default="", description="Additional question")
 
 
 class HearingChain:
@@ -59,7 +59,9 @@ class HearingChain:
                 }
             )
         except Exception as e:
-            raise RuntimeError(f"LLMの呼び出し中にエラーが発生しました: {str(e)}")
+            raise RuntimeError(
+                f"An error occurred while calling the LLM: {str(e)}"
+            )
 
         return hearing
 
