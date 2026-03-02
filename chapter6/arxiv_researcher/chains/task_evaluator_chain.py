@@ -12,15 +12,15 @@ from arxiv_researcher.chains.utils import dict_to_xml_str, load_prompt
 class TaskEvaluation(BaseModel):
     need_more_information: bool = Field(
         default=True,
-        description="必要な情報が足りている場合はFalse",
+        description="Set to False if the required information is sufficient",
     )
     reason: str = Field(
         default="",
-        description="評価の理由を日本語で端的に表す",
+        description="Briefly describe the reason for the evaluation in Japanese",
     )
     content: str = Field(
         default="",
-        description="追加の調査として必要な内容を詳細に日本語で記述",
+        description="Describe in detail (in Japanese) what additional investigation is needed",
     )
 
 
