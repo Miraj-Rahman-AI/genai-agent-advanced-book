@@ -16,7 +16,7 @@ class DecomposedTasks(BaseModel):
         default_factory=list,
         min_length=settings.query_decomposer.min_decomposed_tasks,
         max_length=settings.query_decomposer.max_decomposed_tasks,
-        description="分解されたタスクのリスト",
+        description="List of decomposed tasks",
     )
 
 
@@ -60,6 +60,9 @@ if __name__ == "__main__":
     decomposer = QueryDecomposer(settings.fast_llm)
     print(
         decomposer.run(
-            "NLPにおける事実検証用データセットに関する以下の3つの観点からの情報を収集してください：1. データセットの一般的な概要と事実検証への貢献2. 代表的なデータセット（FEVER、SQuADなど）の具体的な特徴と構造3. これらのデータセットの実際の使用事例と研究・産業界への影響"
+            "Please collect information on fact verification datasets in NLP from the following three perspectives: "
+            "1. A general overview of the datasets and their contributions to fact verification "
+            "2. Specific features and structure of representative datasets (e.g., FEVER, SQuAD) "
+            "3. Practical use cases of these datasets and their impact on academia and industry"
         )
     )
