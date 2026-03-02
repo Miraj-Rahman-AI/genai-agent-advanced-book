@@ -9,10 +9,11 @@ CURRENT_DATE: {current_date}
 </goal_setting>
 
 <task>
-goal_settingタグに記述された内容を実現するため、contextタグの内容を収集しました。収集した情報を基に、goal_settingタグに記述された内容が達成可能かどうかを評価してください。
+To achieve the objective described in the goal_setting tag, the information contained in the context tag has been collected.
+Based on the collected information, evaluate whether the objective described in the goal_setting tag is achievable.
 </task>
 
 <rules>
-1. 論文には参考文献があり、それらを読むことでより深く理解できる場合があります。
-2. 最終レポートのためには具体的な実験結果が必要です。
-</rules> 
+1. Each paper includes references, and deeper understanding may be obtained by reviewing those references.
+2. Concrete experimental results are required for the final report.
+</rules>
