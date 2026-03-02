@@ -6,7 +6,7 @@
 {goal}
 </goal_setting>
 
-以下のタスクに答えてください。情報はcontextタグ内のもののみを使用し、事前知識は使用しないでください。goal_settingsタグに含まれる目的を踏まえながら、タスクの内容に回答してください。goal_settingsタグに含まれるチェックリストを満たすようにしてください。
+Please answer the following task. Use only the information within the context tag, and do not use prior knowledge. Consider the objectives contained in the goal_settings tag when responding to the task. Be sure to satisfy the checklist contained in the goal_settings tag.
 
 タスク: {task}
 
