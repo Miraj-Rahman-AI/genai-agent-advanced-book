@@ -7,18 +7,18 @@ from arxiv_researcher.models.arxiv import ArxivPaper
 
 class ReadingResult(BaseModel):
     """
-    論文の読み込み結果を表現するモデル
+    Model representing the result of reading and analyzing a research paper
     """
 
-    id: int = Field(default=0, description="ID")
-    task: str = Field(default="", description="調査タスク")
-    paper: ArxivPaper = Field(default=None, description="論文データ")
+    id: int = Field(default=0, description="Unique ID")
+    task: str = Field(default="", description="Research task")
+    paper: ArxivPaper = Field(default=None, description="Paper metadata")
     markdown_path: str = Field(
-        default="", description="論文のmarkdownファイルへの相対パス"
+        default="", description="Relative path to the paper's markdown file"
     )
-    answer: str = Field(default="", description="タスクに対する回答")
+    answer: str = Field(default="", description="Answer generated for the task")
     is_related: Optional[bool] = Field(
-        default=None, description="タスクとの関係性があるかどうか"
+        default=None, description="Whether the paper is related to the task"
     )
 
     def __hash__(self) -> int:
