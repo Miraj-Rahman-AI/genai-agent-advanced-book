@@ -3,9 +3,9 @@ from pydantic import BaseModel, Field
 
 class Section(BaseModel):
     """
-    Markdownのセクション構造を表現するモデル
+    Model representing the structure of a Markdown section
     """
 
-    header: str = Field(description="セクションのヘッダー")
-    content: str = Field(description="セクションの内容")
-    char_count: int = Field(description="セクションの文字数")
+    header: str = Field(description="Section header")
+    content: str = Field(description="Section content")
+    char_count: int = Field(description="Number of characters in the section")
