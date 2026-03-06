@@ -32,82 +32,82 @@ User Query: {query}
 
 EXPAND_QUERY_PROMPT = """\
 <system>
-あなたは、与えられた単一のサブクエリから効果的なarXiv検索クエリを生成する専門家です。あなたの役割は、学術的な文脈を理解し、arXivの検索システムで直接使用できる最適な検索クエリを作成することです。
+You are an expert in generating effective arXiv search queries from a given single subquery. Your role is to understand the academic context and create the optimal search query that can be used directly in the arXiv search system.
 
 {feedback}
 </system>
 
-## 主要タスク
+## Main Tasks
 
-1. 提供されたサブクエリを分析する
-2. サブクエリから重要なキーワードを抽出する
-3. 抽出したキーワードを使用して、arXivで直接使用可能な効果的な検索クエリを構築する
+1. Analyze the provided subquery
+2. Extract important keywords from the subquery
+3. Construct an effective search query that can be used directly on arXiv using the extracted keywords
 
-## 詳細な指示
+## Detailed Instructions
 
 <instructions>
-1. サブクエリを注意深く読み、主要な概念や専門用語を特定してください。
-2. 学術的文脈に適した具体的なキーワードを選択してください。
-3. 同義語や関連する用語も考慮に入れてください。
-4. arXivの検索構文を適切に使用して、効果的な検索クエリを作成してください。
-5. 検索結果が適切に絞り込まれるよう、必要に応じてフィールド指定子を使用してください。
-6. 生成したクエリがarXivの検索ボックスに直接コピー＆ペーストできることを確認してください。
+1. Carefully read the subquery and identify the main concepts and technical terms.
+2. Select specific keywords appropriate for the academic context.
+3. Consider synonyms and related terms as well.
+4. Use arXiv search syntax appropriately to create an effective search query.
+5. Use field specifiers when necessary so that the search results are properly narrowed down.
+6. Ensure that the generated query can be directly copied and pasted into the arXiv search box.
 </instructions>
 
-## 重要なルール
+## Important Rules
 
 <rules>
-1. クエリには1〜2つの主要なキーワードまたはフレーズを含めてください。
-2. 一般的すぎる用語や非学術的な用語は避けてください。
-3. 検索クエリは20文字以内に収めてください。
-4. クエリの前後に余分な空白や引用符を付けないでください。
-5. 説明や理由付けは含めず、純粋な検索クエリのみを出力してください。
-6. 最大キーワード数は2つまでにすること。
-7. OR検索はしないこと。
+1. The query must include one or two main keywords or phrases.
+2. Avoid terms that are too general or non-academic.
+3. Keep the search query within 20 characters.
+4. Do not include extra spaces or quotation marks before or after the query.
+5. Do not include explanations or reasoning; output only the pure search query.
+6. Use at most two keywords.
+7. Do not use OR search.
 </rules>
 
-## arXiv検索の構文ヒント
+## arXiv Search Syntax Hints
 
 <arxiv_syntax>
-- AND: 複数の用語を含む文書を検索（例：quantum AND computing）
-- OR: いずれかの用語を含む文書を検索（例：neural OR quantum）
-- 引用符: フレーズ検索（例："quantum computing"）
-- フィールド指定子: ti:（タイトル）, au:（著者）, abs:（要約）
-- マイナス記号: 特定の用語を除外（例：quantum -classical）
-- ワイルドカード: 部分一致検索（例：neuro*）
+- AND: Search for documents containing multiple terms (e.g., quantum AND computing)
+- OR: Search for documents containing either term (e.g., neural OR quantum)
+- Quotation marks: Phrase search (e.g., "quantum computing")
+- Field specifiers: ti: (title), au: (author), abs: (abstract)
+- Minus sign: Exclude specific terms (e.g., quantum -classical)
+- Wildcard: Partial match search (e.g., neuro*)
 </arxiv_syntax>
 
 <keywords>
-- 研究的なキーワードの例: RL, Optimization, LLM, etc.
-- サーベイ論文について検索する場合は次のキーワードを利用する: Survey, Review
-- データセットについて検索する場合は次のキーワードを利用する: Benchmark
-- 論文名が分かっている場合は論文名で検索する
+- Examples of research-oriented keywords: RL, Optimization, LLM, etc.
+- When searching for survey papers, use the following keywords: Survey, Review
+- When searching for datasets, use the following keyword: Benchmark
+- If the paper title is known, search by the paper title
 </keywords>
 
-## 例
+## Examples
 
 <example>
-クエリ: 量子コンピューティングにおける最近の進歩に関する情報を取得する。
+Query: Retrieve information about recent advances in quantum computing.
 
-arXiv検索クエリ:
+arXiv Search Query:
 ti:"quantum computing"
 </example>
 
 <example>
-クエリ: 深層強化学習の金融市場への応用に関する最新の研究を見つける。
+Query: Find the latest research on applications of deep reinforcement learning to financial markets.
 
-arXiv検索クエリ:
+arXiv Search Query:
 "deep reinforcement learning" AND "financial markets"
 </example>
 
-## 入力フォーマット
+## Input Format
 
 <input_format>
-目標: {goal_setting}
-クエリ: {query}
+Goal: {goal_setting}
+Query: {query}
 </input_format>
 
-REMEMBER: rulesタグの内容に必ず従うこと
+REMEMBER: You must follow the content of the rules tag.
 """.strip()
 
 
@@ -244,18 +244,18 @@ class ArxivSearcher(Searcher):
 
             if papers:
                 logger.info("Papers found. Exiting retry loop.")
-                break  # 結果が見つかったのでループを抜ける
+                break  # Exit the loop because results were found
 
             else:
                 retry_count += 1
                 if retry_count < self.max_retries:
-                    feedback = "検索結果が0件でした。クエリをより一般的なものや関連するキーワードに調整してください。"
+                    feedback = "The search returned zero results. Please adjust the query to be more general or use related keywords."
                     logger.info(
                         f"No papers found. Retrying with adjusted query. Attempt {retry_count}/{self.max_retries}"
                     )
                 else:
                     logger.info("Max retries reached. No results found.")
-                    break  # 最大リトライ回数に達したのでループを抜ける
+                    break  # Exit the loop because the maximum number of retries has been reached
 
         if papers:
             reranked = self.cohere_client.rerank(
@@ -271,7 +271,7 @@ class ArxivSearcher(Searcher):
                 paper.relevance_score = result.relevance_score
                 reranked_papers.append(paper)
 
-            # 関連度がしきい値以上の結果のみを返す
+            # Return only results whose relevance score is above the threshold
             papers = [
                 paper
                 for paper in reranked_papers
